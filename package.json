@@ -1,0 +1,29 @@
+{
+  "name": "@small-tech/node-hugo",
+  "version": "1.0.0",
+  "description": "A basic cross-platform interface to the Hugo binary from Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@source.ind.ie:site.js/lib/node-hugo.git"
+  },
+  "author": {
+    "name": "Aral Balkan",
+    "email": "aral@small-tech.org",
+    "url": "https://ar.al"
+  },
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "fs-extra": "^8.1.0"
+  },
+  "devDependencies": {
+    "tape": "^4.13.0"
+  },
+  "pkg": {
+    "assets": "hugo-bin/*"
+  }
+}
