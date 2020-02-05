@@ -19,7 +19,11 @@
   const hugo = new Hugo()
 
   const command = process.argv[2]
+
   if (command === 'build') {
+    //
+    // Hugo build.
+    //
     const sourcePath = process.argv[3]
     const destinationPath = process.argv[4]
     if (!sourcePath || !destinationPath) {
@@ -27,7 +31,8 @@
       showUsage()
       process.exit(1)
     }
-    console.log(`\n[Hugo] Build. Source: ${sourcePath} Destination: ${destinationPath}\n`)
+
+    console.log(`\n[node-hugo] Build. Source: ${sourcePath} Destination: ${destinationPath}\n`)
 
     let result
     try {
@@ -49,9 +54,21 @@
 
   } else if (command === 'serve') {
     //
-    // TODO
+    // Start Hugo server.
     //
-    console.log('serve (todo)', process.argv[3])
+    const sourcePath = process.argv[3]
+    const destinationPath = process.argv[4]
+    const baseURL = process.argv[5]
+
+    if (!sourcePath || !destinationPath || !baseURL) {
+      console.log('\nError: Serve command requires <sourcePath>, <destinationPath>, and <baseURL> arguments')
+      showUsage()
+      process.exit(1)
+    }
+
+    console.log(`\n[node-hugo] Serve. Source: ${sourcePath} Destination: ${destinationPath} Base URL: ${baseURL}\n`)
+
+    hugo.serve(sourcePath, destinationPath, baseURL)
   } else {
     //
     // Error.

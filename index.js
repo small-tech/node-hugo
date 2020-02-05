@@ -6,6 +6,7 @@ const util = require('util')
 const childProcess = require('child_process')
 
 const exec = util.promisify(childProcess.exec)
+const spawn = childProcess.spawn
 
 const homeDir = os.homedir()
 
@@ -57,9 +58,25 @@ class Hugo {
     return result.stdout
   }
 
-  // Starts a Hugo server at the requested path to serve and returns the Hugo server instance.
-  async serve (pathToServe) {
-    throw new Error('Unimplemented.')
+  // Starts a Hugo server with defaults set for rendering to disk and using outside live reload.
+  // (These are the defaults our current use case on Site.js).
+
+  // hugo server --source=.hugo-source --destination=../.hugo-public --buildDrafts --renderToDisk --baseURL=https://localhost --disableLiveReload --appendPort=false
+
+  serve (sourcePath, destinationPath, baseURL) {
+    const args = [
+      'server',
+      `--source=${sourcePath}`,
+      `--destination=${destinationPath}`,
+      `--baseURL=${baseURL}`,
+      '--buildDrafts',
+      '--renderToDisk',
+      '--disableLiveReload',
+      '--appendPort=false',
+    ]
+    const options = { env: process.env, stdio: 'inherit' }
+    const hugoServer = spawn(this.hugoBinaryPath, args, options)
+    return hugoServer
   }
 
   //
