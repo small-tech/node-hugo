@@ -9,6 +9,14 @@ const exec = util.promisify(childProcess.exec)
 
 const homeDir = os.homedir()
 
+class HugoError extends Error {
+  constructor (message, output) {
+    super(message)
+    this.sdterr = output
+    this.name = 'HugoError'
+  }
+}
+
 class Hugo {
   constructor (nodeHugoDir = path.join(homeDir, '.small-tech.org', 'node-hugo')) {
 
@@ -40,8 +48,13 @@ class Hugo {
       env: process.env
     }
     const result = await exec(hugoBuildCommand, options)
-    console.log('Hugo build result', result)
-    return result
+
+    if (result.stderr !== '') {
+      // There was an error.
+      throw new HugoError('Build failed', result.stderr)
+    }
+
+    return result.stdout
   }
 
   // Starts a Hugo server at the requested path to serve and returns the Hugo server instance.
@@ -104,5 +117,6 @@ class Hugo {
     return hugoBinaryExternalPath
   }
 }
+
 
 module.exports = Hugo
