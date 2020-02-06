@@ -124,16 +124,17 @@ class Hugo {
     // Nexe does not support copyFileSync() yet (see https://github.com/nexe/nexe/issues/607).
     const hugoBinaryExternalPath = path.join(this.nodeHugoDir, hugoBinaryName)
 
-    try {
-      const hugoBinaryBuffer = fs.readFileSync(hugoBinaryInternalPath, 'binary')
-      fs.writeFileSync(hugoBinaryExternalPath, hugoBinaryBuffer, {encoding: 'binary', mode: 0o755})
-    } catch (error) {
-      throw new Error(` 🤯 [node-hugo] Panic: Could not copy Hugo binary to external directory: ${error.message}`)
+    if (!fs.existsSync(hugoBinaryExternalPath)) {
+      try {
+        const hugoBinaryBuffer = fs.readFileSync(hugoBinaryInternalPath, 'binary')
+        fs.writeFileSync(hugoBinaryExternalPath, hugoBinaryBuffer, {encoding: 'binary', mode: 0o755})
+      } catch (error) {
+        throw new Error(` 🤯 [node-hugo] Panic: Could not copy Hugo binary to external directory: ${error.message}`)
+      }
     }
 
     return hugoBinaryExternalPath
   }
 }
-
 
 module.exports = Hugo
