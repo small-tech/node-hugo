@@ -25,7 +25,7 @@ async function httpGet (url) {
 }
 
 test('[node-hugo] ', async t => {
-  t.plan(1)
+  t.plan(3)
 
   const sourcePath = 'test/site'
   const destinationPath = '../public' /* NB. relative to source path */
@@ -44,6 +44,18 @@ test('[node-hugo] ', async t => {
   }
 
   t.false(hasError, '[hugo build] does not throw an error')
+
+  const deflatedOutput = output.replace(/\s/g, '')
+
+  // Ensure build statistics are as we expect.
+  t.true(deflatedOutput.includes('Pages|2Paginatorpages|0Non-pagefiles|1Staticfiles|0Processedimages|0Aliases|0Sitemaps|1Cleaned|0'), '[hugo build] console output statistics are as expected')
+
+  const deflatedIndexPageHTML = fs.readFileSync('test/public/index.html', 'utf-8').replace(/\s/g, '')
+
+  const expectedDeflatedIndexPageHTML = '<!DOCTYPEhtml><htmllang="en"><head><metaname="generator"content="Hugo0.64.0"/><metacharset="UTF-8"><metaname="viewport"content="width=device-width,initial-scale=1.0"><title>Yes!</title></head><body><h1>Yes!</h1><p>node-hugo<strong>works!</strong></p></body></html>'
+
+  // Ensure generated HTML is as we expect.
+  t.strictEquals(expectedDeflatedIndexPageHTML, deflatedIndexPageHTML, '[hugo build] index page HTML is as expected')
 
 })
 
