@@ -33,26 +33,28 @@ const Hugo = require('node-hugo')
 
   console.log('Site build successful. Output:', hugo.output)
 
-  // Start Hugo server.
-  const hugoServer = hugo.createServer(optionalPathToHugoConfiguration)
+  // Start Hugo server. Returns a ChildProcess instance.
+  const hugoServerProcess = hugo.createServer(optionalPathToHugoConfiguration)
 
-  hugoServer.on('error', (error) => {
+  hugoServerProcess.on('error', (error) => {
     console.log('Hugo server encountered an error', error)
   })
 
-  hugoServer.on('output', (newOutput) => {
-    console.log(`[Hugo] ${newOutput}`)
+  hugoServerProcess.stdout.on('data', (data) => {
+    console.log(`[Hugo] ${data}`)
   })
 
-  hugoServer.on('stop', (code) => {
-    console.log('Hugo server closed with code', code)
+  hugoServerProcess.stderr.on('data', (data) => {
+    console.log(`[Hugo] [ERROR] ${data}`)
   })
 
-  await hugoServer.start()
+  hugoServerProcess.on('close', (code) => {
+    console.log('Hugo server process exited with code', code)
+  })
 
   // Close the server after 5 seconds.
   setTimeout(() => {
-    hugoServer.stop()
+    hugoServerProcess.kill()
   }, 5000)
 
 })()

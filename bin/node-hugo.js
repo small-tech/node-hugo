@@ -66,9 +66,29 @@
       process.exit(1)
     }
 
+    // Logs the data returned from a child process’s stdout and stderr
+    // to the console, prepending an extensible custom prefix to each line.
+    function log (data, additionalPrefix = ' ') {
+      const lines = data.toString('utf-8').split('\n')
+      lines.forEach(line => console.log(`[node-hugo] [server]${additionalPrefix}${line}`))
+    }
+
     console.log(`\n[node-hugo] Serve. Source: ${sourcePath} Destination: ${destinationPath} Base URL: ${baseURL}\n`)
 
-    hugo.serve(sourcePath, destinationPath, baseURL)
+    const hugoServerProcess = hugo.serve(sourcePath, destinationPath, baseURL)
+
+    hugoServerProcess.stdout.on('data', (data) => {
+      log(data)
+    })
+
+    hugoServerProcess.stderr.on('data', (data) => {
+      log(data, ' [ERROR] ')
+    })
+
+    hugoServerProcess.on('close', (code) => {
+      console.log('[node-hugo] [server] Hugo server process exited with code', code)
+    })
+
   } else {
     //
     // Error.

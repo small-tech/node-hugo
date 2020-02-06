@@ -74,7 +74,7 @@ class Hugo {
       '--disableLiveReload',
       '--appendPort=false',
     ]
-    const options = { env: process.env, stdio: 'inherit' }
+    const options = { env: process.env }
     const hugoServer = spawn(this.hugoBinaryPath, args, options)
     return hugoServer
   }
