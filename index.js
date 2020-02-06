@@ -43,8 +43,8 @@ class Hugo {
   // (don’t shoot me, this is a Hugo convention so I’m mirroring it for
   // consistency with regular Hugo usage). The returned result is the
   // object returned from the exec() call with stdout and stderr properties.
-  async build (sourcePath = '.', destinationPath = 'public/') {
-    const hugoBuildCommand = `${this.hugoBinaryPath} --source=${sourcePath} --destination=${destinationPath}`
+  async build (sourcePath = '.', destinationPath = 'public/', baseURL = 'http://localhost:1313') {
+    const hugoBuildCommand = `${this.hugoBinaryPath} --source=${sourcePath} --destination=${destinationPath} --baseURL=${baseURL}`
     const options = {
       env: process.env
     }
@@ -63,7 +63,7 @@ class Hugo {
 
   // hugo server --source=.hugo-source --destination=../.hugo-public --buildDrafts --renderToDisk --baseURL=https://localhost --disableLiveReload --appendPort=false
 
-  serve (sourcePath, destinationPath, baseURL) {
+  serve (sourcePath = '.', destinationPath = 'public/', baseURL = 'http://localhost:1313') {
     const args = [
       'server',
       `--source=${sourcePath}`,
