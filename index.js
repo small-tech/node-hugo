@@ -85,14 +85,14 @@ class Hugo {
       // Wait for the line telling us that the build is complete and that
       // the server is ready and only then return.
 
-      let outputSoFar = ''
+      let hugoBuildOutput = ''
       let buildComplete = false
 
       const stdoutHandler = (data) => {
         const lines = data.toString('utf-8').split('\n')
 
         lines.forEach(line => {
-          outputSoFar += `\n${line}`
+          hugoBuildOutput += `\n${line}`
 
           if (line.startsWith('Built in')) {
             // The site has been built. Let’s resolve the promise.
@@ -108,8 +108,8 @@ class Hugo {
 
           // OK.
           resolve({
-            process: hugoServerProcess,
-            output: outputSoFar
+            hugoServerProcess,
+            hugoBuildOutput
           })
         }
       }

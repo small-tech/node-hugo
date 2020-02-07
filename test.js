@@ -60,7 +60,7 @@ test('[hugo-build] ', async t => {
 
 
 test('[hugo-serve] ', async t => {
-  t.plan(9)
+  t.plan(5)
 
   const sourcePath = 'test/site'
   const destinationPath = '../public' /* NB. relative to source path */
@@ -70,50 +70,19 @@ test('[hugo-serve] ', async t => {
     fs.removeSync(destinationPath)
   }
 
-  const hugoServerProcess = hugo.serve(sourcePath, destinationPath, baseURL)
-  let hasError = false
-  let hasWarning = false
+  const {hugoServerProcess, hugoBuildOutput} = await hugo.serve(sourcePath, destinationPath, baseURL)
 
-  let builtInMessageShown = false
-  let webServerMessageIsShown = false
-  let pressCtrlCToStopMessageIsShown = false
-
-  hugoServerProcess.stdout.on('data', (data) => {
-
-    const lines = data.toString('utf-8').split('\n')
-
-    lines.forEach(line => {
-      const deflatedLine = line.replace(/\s/g, '')
-
-      if (line.includes('WARN')) { hasWarning = true }
-      if (line.includes('Built in')) { builtInMessageShown = true }
-      if (line.includes('Web Server is available at http://localhost:1313/')) { webServerMessageIsShown = true }
-      if (line.includes('Press Ctrl+C to stop')) { pressCtrlCToStopMessageIsShown = true } // last message once server is ready
-
-      if (line.includes('Pages')) { t.strictEquals(deflatedLine, 'Pages|2', 'two pages are rendered') }
-      if (line.includes('Non-page files')) { t.strictEquals(deflatedLine, 'Non-pagefiles|1', 'one non-page file is rendered') }
-      if (line.includes('Sitemaps')) { t.strictEquals(deflatedLine, 'Sitemaps|1', 'one sitemap is rendered') }
-
-    })
+  hugoServerProcess.on('exit', (code) => {
+    t.assert(true, 'server process exited via kill()')
+    t.end()
   })
 
-  hugoServerProcess.stderr.on('data', (data) => {
-    hasError = true
-  })
+  hugoServerProcess.kill()
 
-  hugoServerProcess.on('close', (code) => {
-    t.assert(true, 'server process is closed via kill()')
-    t.false(hasError, 'server did not encounter an error')
-    t.false(hasWarning, 'server did not encounter a warning')
+  const hugoBuildOutputDeflated = hugoBuildOutput.replace(/\s/g, '')
 
-    t.true(builtInMessageShown, 'server output included the “built in N ms” message')
-    t.true(webServerMessageIsShown, 'server output included “web server is available” message')
-    t.true(pressCtrlCToStopMessageIsShown, 'server output included “press CTRL+C to stop” message (last message in server launch)')
-
-  })
-
-  setTimeout(() => {
-    // Stop the process.
-    hugoServerProcess.kill()
-  }, 250)
+  t.false(hugoBuildOutputDeflated.includes('WARN'), 'build did not encounter a warning')
+  t.true(hugoBuildOutputDeflated.includes('Pages|2'), 'two pages are rendered')
+  t.true(hugoBuildOutputDeflated.includes('Non-pagefiles|1'), 'one non-page file is rendered')
+  t.true(hugoBuildOutputDeflated.includes('Sitemaps|1'), 'one sitemap is rendered')
 })
