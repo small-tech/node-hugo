@@ -60,9 +60,13 @@ class Hugo {
 
   // Starts a Hugo server with defaults set for rendering to disk and using outside live reload.
   // (These are the defaults our current use case on Site.js).
-
-  // hugo server --source=.hugo-source --destination=../.hugo-public --buildDrafts --renderToDisk --baseURL=https://localhost --disableLiveReload --appendPort=false
-
+  //
+  // Returns an object that contains a promise that’s resolved to an object with the following
+  // properites once the initial Hugo build is complete:
+  //
+  //   - a referenece to the hugo server process
+  //   - the hugo output so far
+  //
   serve (sourcePath = '.', destinationPath = 'public/', baseURL = 'http://localhost:1313') {
     const args = [
       'server',
@@ -75,8 +79,51 @@ class Hugo {
       '--appendPort=false',
     ]
     const options = { env: process.env }
-    const hugoServer = spawn(this.hugoBinaryPath, args, options)
-    return hugoServer
+    const hugoServerProcess = spawn(this.hugoBinaryPath, args, options)
+
+    const hugoServerPromise = new Promise((resolve, reject) => {
+      // Wait for the line telling us that the build is complete and that
+      // the server is ready and only then return.
+
+      let outputSoFar = ''
+      let buildComplete = false
+
+      const stdoutHandler = (data) => {
+        const lines = data.toString('utf-8').split('\n')
+
+        lines.forEach(line => {
+          outputSoFar += `\n${line}`
+
+          if (line.startsWith('Built in')) {
+            // The site has been built. Let’s resolve the promise.
+            buildComplete = true
+          }
+        })
+
+        if (buildComplete) {
+          // Clean up. If the consumer wants to, they can add their own to the
+          // hugo server process instance that we will return.
+          hugoServerProcess.stdout.removeAllListeners()
+          hugoServerProcess.stderr.removeAllListeners()
+
+          // OK.
+          resolve({
+            process: hugoServerProcess,
+            output: outputSoFar
+          })
+        }
+      }
+
+      const stderrHandler = (data) => {
+        const errorMessage = data.toString('utf-8')
+        reject(errorMessage)
+      }
+
+      hugoServerProcess.stdout.on('data', stdoutHandler)
+      hugoServerProcess.stderr.on('data', stderrHandler)
+    })
+
+    return hugoServerPromise
   }
 
   //
