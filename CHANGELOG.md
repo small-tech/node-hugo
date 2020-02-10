@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+## [1.0.1] - 2020-02-10
 
-## [1.0.0] - TBA
+### Fixes
+
+   - Disables fast render so Hugo updates are more consistent.
+
+## [1.0.0] - 2020-02-07
 
 Initial release.

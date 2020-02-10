@@ -77,6 +77,7 @@ class Hugo {
       '--renderToDisk',
       '--disableLiveReload',
       '--appendPort=false',
+      '--disableFastRender'
     ]
     const options = { env: process.env }
     const hugoServerProcess = spawn(this.hugoBinaryPath, args, options)
