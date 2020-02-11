@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "tape test.js"
+    "test": "tape test.js",
+    "update-hugo-bin": "node bin/update-hugo-bin.js"
   },
   "repository": {
     "type": "git",
