@@ -155,7 +155,7 @@ class Hugo {
     if (platform === undefined) throw new Error('Unsupported platform', this.machine.platform)
     if (architecture === undefined) throw new Error('Unsupported architecture', this.machine.architecture)
 
-    const hugoVersion = '0.64.0'
+    const hugoVersion = '0.64.1'
 
     const hugoBinaryName = `hugo-v${hugoVersion}-${platform}-${architecture}`
     const hugoBinaryRelativePath = path.join('hugo-bin', hugoBinaryName)

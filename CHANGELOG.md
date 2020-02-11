@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2020-02-11
+
+### Fixes
+
+  - Fix regression due to version number change
+  - Update tests
+
 ## [1.1.0] - 2020-02-11
+
+### Changes
 
   - Upgrade Hugo to [version 0.64.1](https://github.com/gohugoio/hugo/releases/tag/v0.64.1).
 
