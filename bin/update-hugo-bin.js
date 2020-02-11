@@ -2,6 +2,7 @@
 
 const https = require('https')
 const fs = require('fs-extra')
+const childProcess = require('child_process')
 const path = require('path')
 const assert = require('assert')
 
@@ -59,7 +60,7 @@ function semverCompare (a, b) {
 ;(async ()=> {
   console.log('')
   console.log(' Update hugo-bin script')
-  console.log(' ──────────────────────')
+  console.log(' ══════════════════════')
   console.log('')
 
   // Get the version of the current release.
@@ -124,35 +125,67 @@ function semverCompare (a, b) {
 
   const latestHugoBinaries = [
     {
+      platform: 'Linux AMD 64-bit',
       archiveName: `hugo_${latestHugoVersion}_Linux-64bit.tar.gz`,
       newBinaryName: `hugo-v${latestHugoVersion}-linux-amd64`
     },
     {
+      platform: 'Linux ARM',
       archiveName: `hugo_${latestHugoVersion}_Linux-ARM.tar.gz`,
-      newBinaryName: `hugo-v${latestHugoVersion}-linux-amd64`
+      newBinaryName: `hugo-v${latestHugoVersion}-linux-arm`
     },
     {
+      platform: 'Darwin (masOS) AMD 64-bit',
       archiveName: `hugo_${latestHugoVersion}_macOS-64bit.tar.gz`,
-      newBinaryName: `hugo-v${latestHugoVersion}-linux-amd64`
+      newBinaryName: `hugo-v${latestHugoVersion}-darwin-amd64`
     },
     {
+      platform: 'Windows AMD 64-bit',
       archiveName: `hugo_${latestHugoVersion}_Windows-64bit.zip`,
-      newBinaryName: `hugo-v${latestHugoVersion}-linux-amd64`
+      newBinaryName: `hugo-v${latestHugoVersion}-windows-amd64.exe`
     }
   ]
 
   for (hugoBinary of latestHugoBinaries) {
-    const hugoBinaryUrl = `${hugoReleaseUrlPrefix}/${hugoBinary.archiveName}`
+    const hugoBinaryArchiveUrl = `${hugoReleaseUrlPrefix}/${hugoBinary.archiveName}`
 
-    console.log(` Downloading ${hugoBinaryUrl} to ${hugoBinariesDirectory}/${hugoBinary.newBinaryName}`)
+    console.log(` ${hugoBinary.platform}`)
+    console.log(` ${'─'.repeat(hugoBinary.platform.length)}`)
 
-    const binaryRedirectUrl = (await secureGet(hugoBinaryUrl)).location
+    console.log('   ├ Downloading archive…')
 
-    const binaryPath = path.join(hugoBinariesDirectory, hugoBinary.archiveName)
+    const binaryArchiveRedirectUrl = (await secureGet(hugoBinaryArchiveUrl)).location
+    const binaryArchivePath = path.join(hugoBinariesDirectory, hugoBinary.archiveName)
+    await secureStreamToFile(binaryArchiveRedirectUrl, binaryArchivePath)
 
-    await secureStreamToFile(binaryRedirectUrl, binaryPath)
+    console.log('   ├ Unarchiving…')
+
+    // Unarchive the downloaded archives and rename the files.
+    if (hugoBinary.archiveName.endsWith('.zip')) {
+      // Extract the Hugo binary.
+      childProcess.execSync(`unzip ${binaryArchivePath} hugo.exe`, {env: process.env, cwd: hugoBinariesDirectory})
+
+      // Rename the Hugo binary.
+      const oldFilePath = path.join(hugoBinariesDirectory, 'hugo.exe')
+      const newFilePath = path.join(hugoBinariesDirectory, hugoBinary.newBinaryName)
+      fs.renameSync(oldFilePath, newFilePath)
+    } else {
+      // Extract the Hugo binary.
+      childProcess.execSync(`tar -zxf ${binaryArchivePath} hugo`, {env: process.env, cwd: hugoBinariesDirectory})
+
+      // Rename the Hugo binary.
+      const oldFilePath = path.join(hugoBinariesDirectory, 'hugo')
+      const newFilePath = path.join(hugoBinariesDirectory, hugoBinary.newBinaryName)
+      fs.renameSync(oldFilePath, newFilePath)
+    }
+
+    console.log('   ├ Deleting archive…')
+
+    // Delete the archive.
+    fs.unlinkSync(binaryArchivePath)
+
+    console.log(`   ╰ Upgraded to ${hugoBinary.newBinaryName}\n`)
   }
 
-  console.log('\n')
-
+  console.log(' Done.\n')
 })()
