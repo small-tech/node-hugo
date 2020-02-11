@@ -67,7 +67,7 @@ const Hugo = require('node-hugo')
 On Linux-esque operating systems (with Bash shell):
 
 ```sh
-npm run upgrade-hugo-bin
+npm run update-hugo-bin
 ```
 
 This will remove the current binaries, download the latest ones, and rename them properly.
