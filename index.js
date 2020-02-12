@@ -38,24 +38,30 @@ class Hugo {
   // Public.
   //
 
+  // Runs a generic, blocking Hugo command using the passed arguments.
+  async command (args) {
+    const hugoCommand = `${this.hugoBinaryPath} ${args}`
+    const options = {
+      env: process.env
+    }
+    const result = await exec(hugoCommand, options)
+
+    if (result.stderr !== '') {
+      // There was an error.
+      throw new HugoError(`Hugo command failed (arguments: ${args})`, result.stderr)
+    }
+
+    return result.stdout
+  }
+
   // Builds the Hugo source from sourcePath and writes the output at
   // destinationPath. Note that destinationPath is relevant to sourcePath
   // (don’t shoot me, this is a Hugo convention so I’m mirroring it for
   // consistency with regular Hugo usage). The returned result is the
   // object returned from the exec() call with stdout and stderr properties.
   async build (sourcePath = '.', destinationPath = 'public/', baseURL = 'http://localhost:1313') {
-    const hugoBuildCommand = `${this.hugoBinaryPath} --source=${sourcePath} --destination=${destinationPath} --baseURL=${baseURL}`
-    const options = {
-      env: process.env
-    }
-    const result = await exec(hugoBuildCommand, options)
-
-    if (result.stderr !== '') {
-      // There was an error.
-      throw new HugoError('Build failed', result.stderr)
-    }
-
-    return result.stdout
+    const hugoBuildCommand = `--source=${sourcePath} --destination=${destinationPath} --baseURL=${baseURL}`
+    return await this.command(hugoBuildCommand)
   }
 
   // Starts a Hugo server with defaults set for rendering to disk and using outside live reload.
