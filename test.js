@@ -24,7 +24,37 @@ async function httpGet (url) {
   })
 }
 
-test('[hugo-build] ', async t => {
+
+test('[hugo.command]', async t => {
+  t.plan(4)
+
+  const sourcePath = 'test/a-new-site'
+
+  if (fs.existsSync(sourcePath)) {
+    fs.removeSync(sourcePath)
+  }
+
+  const args = `new site ${sourcePath}`
+
+  let hasError = false
+  let output = null
+  try {
+    // Tell the built-in Hugo binary to create a new site at ./my-new-site/.
+    output = await hugo.command(args)
+  } catch (error) {
+    hasError = true
+  }
+
+  t.false(hasError, 'does not throw an error')
+  t.true(output.includes('Congratulations! Your new Hugo site is created'), 'new site is generated')
+  t.true(fs.existsSync(sourcePath), 'generated site exists where we expect it')
+
+  const generatedFiles = fs.readdirSync(sourcePath)
+  t.true(generatedFiles.join(',') === 'archetypes,config.toml,content,data,layouts,static,themes', 'contents of generated site are as expected')
+})
+
+
+test('[hugo.build] ', async t => {
   t.plan(3)
 
   const sourcePath = 'test/site'
@@ -59,7 +89,7 @@ test('[hugo-build] ', async t => {
 })
 
 
-test('[hugo-serve] ', async t => {
+test('[hugo.serve] ', async t => {
   t.plan(5)
 
   const sourcePath = 'test/site'
