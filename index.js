@@ -42,7 +42,8 @@ class Hugo {
   async command (args) {
     const hugoCommand = `${this.hugoBinaryPath} ${args}`
     const options = {
-      env: process.env
+      env: process.env,
+      stdio: 'pipe',
     }
     const result = await exec(hugoCommand, options)
 
@@ -85,6 +86,15 @@ class Hugo {
       '--appendPort=false',
       '--disableFastRender'
     ]
+    return this.serverWithArgs(args)
+  }
+
+  // Starts a generic Hugo server
+  serverWithArgs (args) {
+    // Args should be an array. Automatically convert an arguments string to one.
+    if (typeof args === 'string') {
+      args = args.split(' ')
+    }
     const options = { env: process.env }
     const hugoServerProcess = spawn(this.hugoBinaryPath, args, options)
 
