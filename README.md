@@ -81,6 +81,8 @@ const Hugo = require('node-hugo')
 })()
 ```
 
+(Version 1.3.0+) For creating Hugo servers with an arbitrary argument string, you can use the `serverWithArgs()` method. This works like the blocking `command()` method but provides streaming output from the Hugo server.
+
 ## Maintenance
 
 ### Update Hugo binaries
