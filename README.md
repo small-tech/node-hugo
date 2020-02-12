@@ -60,7 +60,7 @@ const Hugo = require('node-hugo')
 })()
 ```
 
-You can also run any Hugo command using the simple passthrough `command()` method:
+(Version 1.2.0+) You can also run any Hugo command using the simple passthrough `command()` method:
 
 ```js
 const Hugo = require('node-hugo')
