@@ -60,6 +60,27 @@ const Hugo = require('node-hugo')
 })()
 ```
 
+You can also run any Hugo command using the simple passthrough `command()` method:
+
+```js
+const Hugo = require('node-hugo')
+
+(async function main () {
+
+  const hugo = new Hugo()
+
+  try {
+    // Tell the built-in Hugo binary to create a new site at ./my-new-site/.
+    await hugo.command('new site my-new-site')
+  } catch (error) {
+    console.log('There was an error creating the new site with Hugo'. error)
+    return
+  }
+
+  console.log('Site build successful. Output:', hugo.output)
+})()
+```
+
 ## Maintenance
 
 ### Update Hugo binaries
