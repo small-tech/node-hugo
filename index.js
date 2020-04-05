@@ -65,14 +65,14 @@ class Hugo {
     return await this.command(hugoBuildCommand)
   }
 
-  // Starts a Hugo server with defaults set for rendering to disk and using outside live reload.
-  // (These are the defaults our current use case on Site.js).
+  // Starts a Hugo server with defaults set for rendering to disk and using external live reload.
+  // (These are the defaults for our current use case on Site.js).
   //
   // Returns an object that contains a promise that’s resolved to an object with the following
-  // properites once the initial Hugo build is complete:
+  // properties once the initial Hugo build is complete:
   //
-  //   - a referenece to the hugo server process
-  //   - the hugo output so far
+  //   - a reference to the Hugo server process
+  //   - the Hugo output so far
   //
   serve (sourcePath = '.', destinationPath = 'public/', baseURL = 'http://localhost:1313') {
     const args = [
@@ -89,7 +89,7 @@ class Hugo {
     return this.serverWithArgs(args)
   }
 
-  // Starts a generic Hugo server
+  // Starts a generic Hugo server.
   serverWithArgs (args) {
     // Args should be an array. Automatically convert an arguments string to one.
     if (typeof args === 'string') {
@@ -152,7 +152,7 @@ class Hugo {
   //
   // Note: this expects the Hugo binaries to be manually renamed prior to being
   // ===== added to the hugo-bin folder. The naming convention we use is the same
-  //       as the one we use in the nodecert project for the mkcert binaries.
+  //       as the one we use in the Auto Encrypt Localhost project for the mkcert binaries.
   hugoBinaryForThisMachine () {
     const platformMap = {
       linux: 'linux',
