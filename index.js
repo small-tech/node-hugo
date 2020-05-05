@@ -1,3 +1,18 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// @small-tech/node-hugo
+//
+// A basic cross-platform interface to the Hugo binary from Node.js that uses
+// the 64-bit release binaries to support Linux, macOS, and Windows.
+//
+// Copyright ⓒ 2020 Aral Balkan. Licensed under AGPLv3 or later.
+// Shared with ♥ by the Small Technology Foundation.
+//
+// Like this? Fund us!
+// https://small-tech.org/fund-us
+//
+////////////////////////////////////////////////////////////////////////////////
+
 const os = require('os')
 const path = require('path')
 const fs = require('fs-extra')
@@ -9,6 +24,8 @@ const exec = util.promisify(childProcess.exec)
 const spawn = childProcess.spawn
 
 const homeDir = os.homedir()
+
+const hugoVersion = '0.64.1'
 
 class HugoError extends Error {
   constructor (message, output) {
@@ -37,6 +54,11 @@ class Hugo {
   //
   // Public.
   //
+
+  // Returns the Hugo version.
+  get version () {
+    return hugoVersion
+  }
 
   // Runs a generic, blocking Hugo command using the passed arguments.
   async command (args) {
@@ -170,8 +192,6 @@ class Hugo {
 
     if (platform === undefined) throw new Error('Unsupported platform', this.machine.platform)
     if (architecture === undefined) throw new Error('Unsupported architecture', this.machine.architecture)
-
-    const hugoVersion = '0.64.1'
 
     const hugoBinaryName = `hugo-v${hugoVersion}-${platform}-${architecture}`
     const hugoBinaryRelativePath = path.join('hugo-bin', hugoBinaryName)

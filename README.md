@@ -1,8 +1,6 @@
-# node-hugo
+# Node Hugo
 
-A basic cross-platform interface to the Hugo binary from Node.js that:
-
-  * Uses the 64-bit release binaries to support Linux, macOS, and Windows.
+A basic cross-platform interface to the Hugo binary from Node.js that uses the 64-bit release binaries to support Linux, macOS, and Windows.
 
 It should __just work™__ 🤞
 
@@ -15,7 +13,7 @@ npm i @small-tech/node-hugo
 ## Usage
 
 ```js
-const Hugo = require('node-hugo')
+const Hugo = require('@small-tech/node-hugo')
 
 (async function main () {
 
@@ -60,10 +58,10 @@ const Hugo = require('node-hugo')
 })()
 ```
 
-(Version 1.2.0+) You can also run any Hugo command using the simple passthrough `command()` method:
+__(Version 1.2.0+)__ You can also run any Hugo command using the simple pass-through `command()` method:
 
 ```js
-const Hugo = require('node-hugo')
+const Hugo = require('@small-tech/node-hugo')
 
 (async function main () {
 
@@ -81,7 +79,15 @@ const Hugo = require('node-hugo')
 })()
 ```
 
-(Version 1.3.0+) For creating Hugo servers with an arbitrary argument string, you can use the `serverWithArgs()` method. This works like the blocking `command()` method but provides streaming output from the Hugo server.
+__(Version 1.3.0+)__ For creating Hugo servers with an arbitrary argument string, you can use the `serverWithArgs()` method. This works like the blocking `command()` method but provides streaming output from the Hugo server.
+
+__(Version 1.4.0+)__ You can retrieve the version of Hugo that’s bundled using the `version` property:
+
+```js
+const Hugo = require('@small-tech/node-hugo')
+const hugo = new Hugo()
+console.log(`Hugo version: ${hugo.version}`)
+```
 
 ## Maintenance
 

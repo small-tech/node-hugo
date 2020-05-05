@@ -116,3 +116,13 @@ test('[hugo.serve] ', async t => {
   t.true(hugoBuildOutputDeflated.includes('Non-pagefiles|1'), 'one non-page file is rendered')
   t.true(hugoBuildOutputDeflated.includes('Sitemaps|1'), 'one sitemap is rendered')
 })
+
+
+test('[hugo.version]', async t => {
+  t.plan(1)
+
+  const output = await hugo.command('version')
+  const versionFromHugo = output.match(/v(\d+\.\d+\.\d+)-/)[1]
+
+  t.strictEquals(hugo.version, versionFromHugo, 'Hugo version is correct.')
+})

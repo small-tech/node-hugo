@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2020-05-05
+
+### Added
+
+  - `version` property that returns the Hugo version ([#3](https://source.small-tech.org/site.js/lib/node-hugo/-/issues/3)).
+
+### Fixed
+
+  - Incorrect require statements in code samples in readme ([#2](https://source.small-tech.org/site.js/lib/node-hugo/-/issues/2)).
+
 ## [1.3.0] - 2020-02-13
 
 ### Added
