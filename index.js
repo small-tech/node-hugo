@@ -96,18 +96,22 @@ class Hugo {
   //   - a reference to the Hugo server process
   //   - the Hugo output so far
   //
-  serve (sourcePath = '.', destinationPath = 'public/', baseURL = 'http://localhost:1313') {
+  serve (sourcePath = '.', destinationPath = 'public/', baseURL = 'http://localhost:1313', buildDrafts = true) {
     const args = [
       'server',
       `--source=${sourcePath}`,
       `--destination=${destinationPath}`,
       `--baseURL=${baseURL}`,
-      '--buildDrafts',
       '--renderToDisk',
       '--disableLiveReload',
       '--appendPort=false',
       '--disableFastRender'
     ]
+
+    if (buildDrafts) {
+      args.push('--buildDrafts')
+    }
+
     return this.serverWithArgs(args)
   }
 

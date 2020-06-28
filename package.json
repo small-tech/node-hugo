@@ -1,6 +1,6 @@
 {
   "name": "@small-tech/node-hugo",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A basic cross-platform interface to the Hugo binary from Node.js.",
   "main": "index.js",
   "scripts": {
