@@ -2,7 +2,11 @@
 
 A basic cross-platform interface to the Hugo binary from Node.js that uses the 64-bit release binaries to support Linux, macOS, and Windows.
 
-It should __just work™__ 🤞
+It should __just work™__
+
+## System requirements
+
+Runs on x64, arm, and arm64 on Linux, macOS, and Windows.
 
 ## Installation
 

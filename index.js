@@ -188,6 +188,7 @@ class Hugo {
 
     const architectureMap = {
       arm: 'arm',
+      arm64: 'arm',
       x64: 'amd64'
     }
 
