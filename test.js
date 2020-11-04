@@ -26,8 +26,6 @@ async function httpGet (url) {
 
 
 test('[hugo.command]', async t => {
-  t.plan(4)
-
   const sourcePath = 'test/a-new-site'
 
   if (fs.existsSync(sourcePath)) {
@@ -51,12 +49,12 @@ test('[hugo.command]', async t => {
 
   const generatedFiles = fs.readdirSync(sourcePath)
   t.true(generatedFiles.join(',') === 'archetypes,config.toml,content,data,layouts,static,themes', 'contents of generated site are as expected')
+
+  t.end()
 })
 
 
 test('[hugo.build] ', async t => {
-  t.plan(3)
-
   const sourcePath = 'test/site'
   const destinationPath = '../public' /* NB. relative to source path */
   const baseURL = 'http://localhost:1313'
@@ -86,12 +84,12 @@ test('[hugo.build] ', async t => {
 
   // Ensure generated HTML is as we expect.
   t.strictEquals(expectedDeflatedIndexPageHTML, deflatedIndexPageHTML, 'index page HTML is as expected')
+
+  t.end()
 })
 
 
 test('[hugo.serve] ', async t => {
-  t.plan(5)
-
   const sourcePath = 'test/site'
   const destinationPath = '../public' /* NB. relative to source path */
   const baseURL = 'http://localhost:1313'
@@ -101,28 +99,31 @@ test('[hugo.serve] ', async t => {
   }
 
   const {hugoServerProcess, hugoBuildOutput} = await hugo.serve(sourcePath, destinationPath, baseURL)
-
-  hugoServerProcess.on('exit', (code) => {
-    t.assert(true, 'server process exited via kill()')
-    t.end()
-  })
-
-  hugoServerProcess.kill()
-
   const hugoBuildOutputDeflated = hugoBuildOutput.replace(/\s/g, '')
 
   t.false(hugoBuildOutputDeflated.includes('WARN'), 'build did not encounter a warning')
   t.true(hugoBuildOutputDeflated.includes('Pages|2'), 'two pages are rendered')
   t.true(hugoBuildOutputDeflated.includes('Non-pagefiles|1'), 'one non-page file is rendered')
   t.true(hugoBuildOutputDeflated.includes('Sitemaps|1'), 'one sitemap is rendered')
+
+  hugoServerProcess.kill()
+
+  await new Promise((resolve, reject) => {
+    hugoServerProcess.on('exit', (code) => {
+      t.assert(true, 'server process exited via kill()')
+      resolve()
+    })
+  })
+
+  t.end()
 })
 
 
 test('[hugo.version]', async t => {
-  t.plan(1)
-
   const output = await hugo.command('version')
   const versionFromHugo = output.match(/v(\d+\.\d+\.\d+)-/)[1]
 
   t.strictEquals(hugo.version, versionFromHugo, 'Hugo version is correct.')
+
+  t.end()
 })
