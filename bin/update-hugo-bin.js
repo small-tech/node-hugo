@@ -135,6 +135,11 @@ function semverCompare (a, b) {
       newBinaryName: `hugo-v${latestHugoVersion}-linux-arm`
     },
     {
+      platform: 'Linux ARM64',
+      archiveName: `hugo_${latestHugoVersion}_Linux-ARM64.tar.gz`,
+      newBinaryName: `hugo-v${latestHugoVersion}-linux-arm64`
+    },
+    {
       platform: 'Darwin (masOS) AMD 64-bit',
       archiveName: `hugo_${latestHugoVersion}_macOS-64bit.tar.gz`,
       newBinaryName: `hugo-v${latestHugoVersion}-darwin-amd64`
