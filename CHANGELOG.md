@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2020-11-04
+
+### Breaking change
+
+__Upgrade Hugo to version 0.78.0 (November 3rd, 2020).__
+
+(Previously bundled version was 0.64.1 from February 9th, 2020.)
+
+There are breaking changes between these Hugo versions, so please read through the [Hugo release notes](https://github.com/gohugoio/hugo/releases).
+
+We ran into the following two issues while upgrading our own sites:
+
+  - In the `[outputs]` section of your _config.toml_ file, change `taxonomy` parameter to `tags` or `categories`. (See [this issue](https://source.small-tech.org/site.js/starters/starter-theme/-/issues/109).)
+
+  - Change usage of parentheses in `if or` statements. (See [this commit](https://source.small-tech.org/site.js/starters/starter-theme/-/commit/2f116aa7f7f3cc4e8db028ad2d47b2ff1c4200f2).)
+
 ## [1.5.0] - 2020-07-09
 
 ### Added
