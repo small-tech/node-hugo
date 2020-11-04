@@ -25,7 +25,7 @@ const spawn = childProcess.spawn
 
 const homeDir = os.homedir()
 
-const hugoVersion = '0.64.1'
+const hugoVersion = '0.78.0'
 
 class HugoError extends Error {
   constructor (message, output) {
@@ -188,7 +188,7 @@ class Hugo {
 
     const architectureMap = {
       arm: 'arm',
-      arm64: 'arm',
+      arm64: 'arm64',
       x64: 'amd64'
     }
 
