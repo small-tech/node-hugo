@@ -21,6 +21,10 @@ We ran into the following two issues while upgrading our own sites:
 
   - Change usage of parentheses in `if or` statements. (See [this commit](https://source.small-tech.org/site.js/starters/starter-theme/-/commit/2f116aa7f7f3cc4e8db028ad2d47b2ff1c4200f2).)
 
+### Changed
+
+  - Now includes separate arm64 binary.
+
 ## [1.5.0] - 2020-07-09
 
 ### Added
